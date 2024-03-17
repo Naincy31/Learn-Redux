@@ -1,4 +1,10 @@
-import { legacy_createStore, combineReducers } from "redux"
+const redux = require('redux')
+const reduxLogger = require('redux-logger')
+
+const createStore = redux.legacy_createStore
+const combineReducers = redux.combineReducers
+const applyMiddleware = redux.applyMiddleware
+const logger = reduxLogger.createLogger()
 
 const BUY_CAKE = 'BUY_CAKE'
 const BUY_ICECREAM = 'BUY_ICECREAM'
@@ -46,13 +52,15 @@ function iceCreamReducer (state = initialIceCreamsState, action) {
     }
 }
 
+//combine the reducers
 const rootReducer = combineReducers({
     cake: cakeReducer,
     iceCream: iceCreamReducer
 })
-const store = legacy_createStore(rootReducer) //takes reducer function to modify the state acc to the actions recieved
+
+const store = createStore(rootReducer, applyMiddleware(logger)) //takes reducer function to modify the state acc to the actions recieved
 console.log('Initial state', store.getState());
-const unsubscribe = store.subscribe(() => console.log('Updated state', store.getState()))
+const unsubscribe = store.subscribe(() => {})
 store.dispatch(buyCake())
 store.dispatch(buyCake())
 store.dispatch(buyCake())
